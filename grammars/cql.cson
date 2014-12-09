@@ -76,7 +76,7 @@
     'name': 'keyword.operator.temporal.cql'
   }
   {
-    'match': '\\b(year|month|day|hour|minute|second|millisecond)s?( +or +(less|more))?\\b'
+    'match': '\\b(year|month|day|hour|minute|second|millisecond)s?( +or +(less|more))? (before|after)\\b'
     'name': 'keyword.operator.temporal.cql'
   }
   {
@@ -128,7 +128,11 @@
     'name': 'keyword.operator.datetime.cql'
   }
   {
-    'match': '\\b(Calculate)?Age(In(Years|Months|Days|Hours|Minutes|Seconds))?At?\\b'
+    'match': '\\b(years?|months?|days?|hours?|minutes?|seconds?|milliseconds?)\\b'
+    'name': 'keyword.operator.datetime.cql'
+  }
+  {
+    'match': '\\b(Calculate)?Age(In(Years|Months|Days|Hours|Minutes|Seconds))?(At)?\\b'
     'name': 'keyword.operator.datetime.cql'
   }
   {
