@@ -32,6 +32,14 @@
     ]
   }
   {
+    'match': '@\\b[0-9][0-9][0-9][0-9](\\-[0-1][0-9](\\-[0-3][0-9](T[0-2][0-9](\\:[0-5][0-9](\\:[0-5][0-9](\\.[0-9][0-9]?[0-9]?(Z|((\\+|\\-)[0-2][0-9](\\:[0-5][0-9])?))?)?)?)?)?)?)?\\b'
+    'name': 'constant.date.cql'
+  }
+  {
+    'match': '@\\bT[0-2][0-9](\\:[0-5][0-9](\\:[0-5][0-9](\\.[0-9][0-9]?[0-9]?(Z|((\\+|\\-)[0-2][0-9](\\:[0-5][0-9])?))?)?)?)?\\b'
+    'name': 'constant.time.cql'
+  }
+  {
     'match': '(?<!\\$)\\b((0([box])[0-9a-fA-F]+)|([0-9]+(\\.[0-9]+)?(e[+\\-]?[0-9]+)?))\\b'
     'name': 'constant.numeric.cql'
   }
@@ -52,7 +60,7 @@
     'name': 'comment.line.double-slash.cql'
   }
   {
-    'match': '\\b(library|using|include|version|called|parameter|valueset|code +systems|context +(Patient|Population)|define( +function +([^\\(]+))?)\\b'
+    'match': '\\b(library|using|include|version|called|parameter|default|valueset|codesystems?|display|public|private|context +(Patient|Population)|define( +function +([^\\(]+))?)\\b'
     'captures':
       '2':
         'name': 'support.constant.cql'
@@ -72,7 +80,7 @@
     'name': 'keyword.operator.temporal.cql'
   }
   {
-    'match': '\\b(starts|ends|meets|overlaps|begins|ends|(properly +)?(includes|during|included +in)|before|after|(start|end)( +of)?)\\b'
+    'match': '\\b(starts|ends|occurs|meets|overlaps|(properly +)?(contains|includes|during|included +in)|before|after|(start|end)( +of)?)\\b'
     'name': 'keyword.operator.temporal.cql'
   }
   {
@@ -84,15 +92,15 @@
     'name': 'keyword.operator.logical.cql'
   }
   {
-    'match': '\\b(coalesce|IfNull|is +null|is +not +null)\\b'
+    'match': '\\b(Coalesce|is +null|is +not +null)\\b'
     'name': 'keyword.operator.nullological.cql'
   }
   {
-    'match': '\\b(cast|as|convert|to|is)\\b'
+    'match': '\\b(cast|as|convert|to|is|ToBoolean|ToConcept|ToDateTime|ToDecimal|ToInteger|ToQuantity|ToString|ToTime)\\b'
     'name': 'keyword.operator.type.cql'
   }
   {
-    'match': '=|<|>'
+    'match': '=|<|>|matches'
     'name': 'keyword.operator.comparison.cql'
   }
   {
@@ -104,15 +112,15 @@
     'name': 'keyword.operator.arithmeticcql'
   }
   {
-    'match': '\\b(Abs|Ceiling|div|Floor|Log|Ln|MaxValue|MinValue|mod|predecessor +of|Round|successor +of|Truncate)\\b'
+    'match': '\\b(Abs|Ceiling|div|Floor|Log|Ln|maximum|minimum|mod|predecessor +of|Round|successor +of|Truncate)\\b'
     'name': 'keyword.operator.arithmetic.cql'
   }
   {
-    'match': '\\b(Combine|Length|Lower|Pos|Split|Substring|Upper)\\b'
+    'match': '\\b(Combine|Length|Lower|PositionOf|Split|Substring|Upper)\\b'
     'name': 'keyword.operator.string.cql'
   }
   {
-    'match': '\\b(DateTime|Now|Today)\\b'
+    'match': '\\b(DateTime|Now|TimeOfDay|Today)\\b'
     'name': 'keyword.operator.datetime.cql'
   }
   {
@@ -124,7 +132,7 @@
     'name': 'keyword.operator.datetime.cql'
   }
   {
-    'match': '\\bduration +in +(years|months|days|hours|minutes|seconds|milliseconds) +of\\b'
+    'match': '\\b(duration|difference) +in +(years|months|days|hours|minutes|seconds|milliseconds) +of\\b'
     'name': 'keyword.operator.datetime.cql'
   }
   {
@@ -152,15 +160,15 @@
     'name': 'keyword.operator.aggregate.cql'
   }
   {
-    'match': '\\b(if|then|else|case|when|else)\\b'
+    'match': '\\b(if|then|else|case|when)\\b'
     'name': 'keyword.control.cql'
   }
   {
-    'match': '\\b(foreach|with|without|where|return|such that|sort( +asc(ending)?|desc(ending)?)?( +by)|asc(ending)|desc(ending))\\b'
+    'match': '\\b(with|without|where|return|such that|sort( +asc(ending)?|desc(ending)?)?( +by)|asc(ending)|desc(ending))\\b'
     'name': 'keyword.control.query.cql'
   }
   {
-    'match': '\\b(list|interval|tuple)\\b'
+    'match': '\\b(Any|Boolean|Code|Concept|DateTime|Decimal|Integer|Interval|List|Quantity|String|Time|Tuple)\\b'
     'name': 'support.type.cql'
   }
   {
