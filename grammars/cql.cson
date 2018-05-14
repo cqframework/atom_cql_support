@@ -60,17 +60,58 @@
     'name': 'comment.line.double-slash.cql'
   }
   {
-    'match': '\\b(library|using|include|version|called|parameter|default|valueset|codesystems?|display|public|private|context +(Patient|Population)|define( +function +([^\\(]+))?)\\b'
+    'match': '\\b(library|using|include|version|called|parameter|default|valueset|codesystems?|display|public|private|context +(Patient|Population))\\b'
     'captures':
       '2':
         'name': 'support.constant.cql'
-      '4':
-        'name': 'entity.name.function.cql'
     'name': 'keyword.declarations.cql'
+  }
+  {
+    'begin': '\\b(define( function)?) (".+?")'
+    'beginCaptures':
+      '1':
+        'name': 'keyword.declarations.cql'
+      '3':
+        'name': 'entity.name.function.cql'
+    'end': ':'
+    'patterns': [
+      'include': '$self'
+    ]
+  }
+  {
+    'match': '\\b([^\\s,\\(\\[:"]+?)\\('
+    'captures':
+      '1':
+        'name': 'entity.name.function.cql'
+  }
+  {
+    'match': '(".+?")\\('
+    'captures':
+      '1':
+        'name': 'entity.name.function.cql'
   }
   {
     'match': '\\bsame +((year|month|day|hour|minute|second|millisecond) +)?(or +before|or +after|as)\\b'
     'name': 'keyword.operator.temporal.cql'
+  }
+  {
+    'begin': '{'
+    'beginCaptures':
+      '0':
+        'name': 'meta.brace.curly.cql'
+    'end': '}'
+    'endCaptures':
+      '0':
+        'name': 'meta.brace.curly.cql'
+    'patterns': [
+      {
+        'match': '(\\b\\S+\\b):'
+        'captures':
+          '1':
+            'name': 'variable.other.property.cql'
+        'include': '$self'
+      }
+    ]
   }
   {
     'match': '\\b(properly +)?within\\s+(\\d+)\\s+(year|month|day|hour|minute|second|millisecond)s? +of\\b'
@@ -160,7 +201,7 @@
     'name': 'keyword.operator.aggregate.cql'
   }
   {
-    'match': '\\b(if|then|else|case|when)\\b'
+    'match': '\\b(if|then|else|case|when|end)\\b'
     'name': 'keyword.control.cql'
   }
   {
