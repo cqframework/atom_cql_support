@@ -1,11 +1,43 @@
 {
   "name": "language-cql",
+  "main": "./lib/main",
   "version": "1.1.0",
   "description": "Clinical Quality Language support in Atom",
   "repository": "https://github.com/cqframework/atom_cql_support",
   "license": "Apache 2.0",
+  "dependencies": {
+    "atom-languageclient": "^0.8.3",
+    "atom-package-deps": "^5.1.0",
+    "path": "^0.12.7",
+    "child_process": "^1.0.2"
+  },
+  "package-deps": [
+    "atom-ide-ui"
+  ],
   "engines": {
     "atom": "*",
     "node": "*"
+  },
+  "enhancedScopes": [
+    "source.rkt"
+  ],
+  "consumedServices": {
+    "linter-indie": {
+      "versions": {
+        "2.0.0": "consumeLinterV2"
+      }
+    }
+  },
+  "providedServices": {
+    "find-references": {
+      "versions": {
+        "0.1.0": "provideFindReferences"
+      }
+    },
+    "code-highlight": {
+      "versions": {
+        "0.1.0": "provideCodeHighlight"
+      }
+    }
   }
 }
