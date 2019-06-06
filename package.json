@@ -26,17 +26,27 @@
       "versions": {
         "2.0.0": "consumeLinterV2"
       }
+    },
+    "console": {
+      "versions": {
+        "0.1.0": "consumeConsole"
+      }
+    },
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
     }
   },
   "providedServices": {
-    "find-references": {
-      "versions": {
-        "0.1.0": "provideFindReferences"
-      }
-    },
     "code-highlight": {
       "versions": {
         "0.1.0": "provideCodeHighlight"
+      }
+    },
+    "code-format.range": {
+      "versions": {
+        "0.1.0": "provideCodeFormat"
       }
     }
   }
