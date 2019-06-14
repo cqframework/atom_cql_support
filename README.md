@@ -12,6 +12,8 @@ published to the Atom package repository, so installation is simple:
 1. If you don't have Atom, [download](https://atom.io/) and install it.
 2. Install the _cql-language_ package by follow the instructions for
    [installing packages](https://atom.io/docs/latest/customizing-atom#installing-packages)
+   a. The _cql-language_ package requires both a Java v1.8 runtime and a correct Java Path.
+   If the installation fails to detect either, you will be prompted to download and install Java and/or set a correct Java Path.
 
 ## Using the CQL support in Atom
 
