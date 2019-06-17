@@ -1,7 +1,7 @@
 {
   "name": "language-cql-preview",
   "main": "./lib/main",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "DBCG Preview - Clinical Quality Language support in Atom",
   "repository": "https://github.com/dbcg/atom_cql_support",
   "license": "Apache 2.0",
