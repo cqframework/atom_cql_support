@@ -46,7 +46,9 @@
     "atom-languageclient": "^0.9.9",
     "atom-package-deps": "^5.1.0",
     "child_process": "^1.0.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "request": "^2.34",
+    "request-promise-native": "^1.0.7"
   },
   "deprecated": false,
   "description": "Clinical Quality Language support in Atom",
@@ -86,5 +88,10 @@
     "url": "git+https://github.com/cqframework/atom_cql_support.git"
   },
   "version": "2.0.11",
-  "languageServerVersion": "0.1-SNAPSHOT/cql.ls-0.1-20191025.031313-29-bin.jar"
+  "languageServer": {
+    "groupId": "info.cqframework",
+    "artifactId": "cql.ls",
+    "version": "0.1-SNAPSHOT",
+    "classifier": "shaded"
+  }
 }
