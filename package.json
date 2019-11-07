@@ -64,7 +64,8 @@
   "main": "./lib/main",
   "name": "language-cql",
   "package-deps": [
-    "atom-ide-ui"
+    "atom-ide-ui",
+    "output-panel"
   ],
   "providedServices": {
     "code-highlight": {
@@ -92,6 +93,12 @@
     "groupId": "info.cqframework",
     "artifactId": "cql.ls",
     "version": "0.1-SNAPSHOT",
+    "classifier": "shaded"
+  },
+  "cqlService": {
+    "groupId": "com.alphora.cql",
+    "artifactId": "cli",
+    "version": "1.0-SNAPSHOT",
     "classifier": "shaded"
   }
 }
