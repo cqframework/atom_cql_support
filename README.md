@@ -38,7 +38,7 @@ electronic clinical quality measures (eCQM) and clinical decision support rules
 ## Local Plugin Development
 * uninstall the language-cql package if you have it installed
 * run `npm install` in the root directory to install dependencies
-* run `amp link` to create a symbolic link from the git directories to the working directory
+* run `apm link` to create a symbolic link from the git directories to the working directory
     * working directory can be found at <user dir>\.atom\packages\language-cql
 * reload workspace to get updates (ctr-shift-f5)
 
