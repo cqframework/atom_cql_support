@@ -1,27 +1,29 @@
 {
-  "name": "language-cql",
-  "main": "./lib/main",
-  "version": "2.0.11",
-  "description": "Clinical Quality Language support in Atom",
-  "repository": "https://github.com/cqframework/atom_cql_support",
-  "license": "Apache 2.0",
-  "dependencies": {
-    "apm": "^1.0.2",
-    "atom-languageclient": "^0.9.9",
-    "atom-package-deps": "^5.1.0",
-    "child_process": "^1.0.2",
-    "path": "^0.12.7"
+  "_from": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
+  "_id": "language-cql@2.0.11",
+  "_inBundle": false,
+  "_integrity": "sha512-sSCd1Nej/vAZqT+c5rCSiDd6LCmLJlBihY37LPjrqmhxkdmjkxt6k/9uS7JWeCau85NEAoCQvbo2LQyiIl39qw==",
+  "_location": "/language-cql",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "remote",
+    "raw": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
+    "rawSpec": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
+    "saveSpec": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
+    "fetchSpec": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball"
   },
-  "package-deps": [
-    "atom-ide-ui"
+  "_requiredBy": [
+    "#USER",
+    "/"
   ],
-  "engines": {
-    "atom": "*",
-    "node": "*"
+  "_resolved": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
+  "_shasum": "22d1efd8ed57069dd098caa01f97d601b9d26ba5",
+  "_spec": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
+  "_where": "/private/var/folders/sd/xddqk_hn6756rcmrnmhwcb340000gp/T/apm-install-dir-119727-15765-1ddgtlq.7t6u",
+  "bugs": {
+    "url": "https://github.com/cqframework/atom_cql_support/issues"
   },
-  "enhancedScopes": [
-    "source.rkt"
-  ],
+  "bundleDependencies": false,
   "consumedServices": {
     "linter-indie": {
       "versions": {
@@ -39,6 +41,31 @@
       }
     }
   },
+  "dependencies": {
+    "apm": "^1.0.2",
+    "atom-languageclient": "^0.9.9",
+    "atom-package-deps": "^5.1.0",
+    "child_process": "^1.0.2",
+    "path": "^0.12.7",
+    "request": "^2.34",
+    "request-promise-native": "^1.0.7"
+  },
+  "deprecated": false,
+  "description": "Clinical Quality Language support in Atom",
+  "engines": {
+    "atom": "*",
+    "node": "*"
+  },
+  "enhancedScopes": [
+    "source.rkt"
+  ],
+  "homepage": "https://github.com/cqframework/atom_cql_support#readme",
+  "license": "Apache 2.0",
+  "main": "./lib/main",
+  "name": "language-cql",
+  "package-deps": [
+    "atom-ide-ui"
+  ],
   "providedServices": {
     "code-highlight": {
       "versions": {
@@ -55,5 +82,22 @@
         "0.1.0": "provideCodeActions"
       }
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cqframework/atom_cql_support.git"
+  },
+  "version": "2.0.11",
+  "languageServer": {
+    "groupId": "info.cqframework",
+    "artifactId": "cql.ls",
+    "version": "0.1-SNAPSHOT",
+    "classifier": "shaded"
+  },
+  "cqlService": {
+    "groupId": "com.alphora.cql",
+    "artifactId": "cli",
+    "version": "1.0-SNAPSHOT",
+    "classifier": "shaded"
   }
 }
