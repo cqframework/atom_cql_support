@@ -64,8 +64,7 @@
   "main": "./lib/main",
   "name": "language-cql",
   "package-deps": [
-    "atom-ide-ui",
-    "output-panel"
+    "atom-ide-ui"
   ],
   "providedServices": {
     "code-highlight": {
