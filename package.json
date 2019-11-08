@@ -87,7 +87,7 @@
     "type": "git",
     "url": "git+https://github.com/cqframework/atom_cql_support.git"
   },
-  "version": "2.0.11",
+  "version": "2.1.0",
   "languageServer": {
     "groupId": "info.cqframework",
     "artifactId": "cql.ls",
