@@ -32,7 +32,6 @@
   "enhancedScopes": [
     "source.rkt"
   ],
-
   "main": "./lib/main",
   "consumedServices": {
     "linter-indie": {
@@ -85,11 +84,10 @@
     "version": "1.0-SNAPSHOT",
     "classifier": "shaded"
   },
-
   "configSchema": {
     "cqlVersion": {
       "order": 10,
-      "title" : "CQL Language Version",
+      "title": "CQL Language Version",
       "type": "string",
       "enum": [
         "1.3"
@@ -98,20 +96,19 @@
     },
     "terminologyServer": {
       "order": 20,
-      "title" : "Terminology Server",
+      "title": "Terminology Server",
       "type": "string",
       "default": "",
       "description": "Url for external terminology server if desired."
     },
     "toolDebug": {
       "order": 30,
-      "title" : "Java Components Debug",
+      "title": "Java Components Debug",
       "type": "boolean",
       "default": false,
       "description": "Start the language server and cli with Java debug options enabled. WARNING: Developer use only."
     }
   },
-
   "_from": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
   "_id": "language-cql@2.0.11",
   "_inBundle": false,
