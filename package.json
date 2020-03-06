@@ -79,7 +79,7 @@
     "classifier": "shaded"
   },
   "cqlService": {
-    "groupId": "com.alphora.cql",
+    "groupId": "org.opencds.cqf.cql",
     "artifactId": "cli",
     "version": "1.0-SNAPSHOT",
     "classifier": "shaded"
