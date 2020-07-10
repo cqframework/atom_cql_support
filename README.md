@@ -1,6 +1,6 @@
 # Clinical Quality Language (CQL) Support in Atom
 
-Adds syntax highlighting to CQL files in Atom, a free and open source editor.  
+Adds syntax highlighting, semantic (error) highlighting, and local execution to CQL files in Atom, a free and open source editor.  
 
 ![CQL Syntax Highlighting Screenshot](https://raw.githubusercontent.com/cqframework/atom_cql_support/master/screenshot.png)
 
@@ -18,12 +18,10 @@ published to the Atom package repository, so installation is simple:
 ## Using the CQL support in Atom
 
 After you've installed the _cql-language_ package, open any _.cql_ file in Atom.
-As long as the file has the _.cql_ extension, syntax highlighting will be
+As long as the file has the _.cql_ extension, syntax and error highlighting will be
 automatically applied.
 
-**NOTE: Syntax highlighting makes editing and reviewing CQL files easier,
-but does _not_ validate the technical or syntactic validity of the CQL
-statements.  This package does not flag invalid CQL.**
+To execute CQL right-click in the CQL Editor Windows and select `CQL -> Execute`
 
 ## More About the Clinical Quality Language
 
