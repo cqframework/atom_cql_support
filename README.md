@@ -23,14 +23,34 @@ automatically applied.
 
 To execute CQL right-click in the CQL Editor Windows and select `CQL -> Execute`
 
+The translation and execution capabilities in the plugin expect CQL files to be in the following directories, by convention:
+
+```
+input/cql
+input/tests
+input/tests/<cql-library-name>
+input/tests/<cql-library-name>/<patient-id>
+input/tests/<cql-library-name>/<patient-id>/<resource-type-name>/<resource files>
+input/vocabulary/codesystem
+input/vocabulary/valueset
+```
+
+Within the tests folder, there is a folder for each CQL library, by name (note that the name of the file _must_ match the name of the library in order for the evaluator to properly execute the CQL). Note also that the evaluator is a separate subsystem from the translator, so it will read whatever is current of off disk, so be sure to save before executing.
+
+Within the library folder, there is a folder for each "test case", in the form of a Patient (the execution only supports patient context execution at this point). The folder must have the same id as the patient (that's how the evaluator knows what the patient id is).
+
+Within each test case folder, there are folders for each resource type, and within each resource type, the individual resource files, in XML or JSON format. (Including a Patient folder with a file for the Patient with the ID of the "test case").
+
 ## More About the Clinical Quality Language
 
 The Clinical Quality Language (CQL) is a domain specific language for expressing
 electronic clinical quality measures (eCQM) and clinical decision support rules
 (CDS) in an author-friendly computable format. Find out more about CQL:
+* [CQL Specification](http://cql.hl7.org)
+* [CQL Stream on FHIR Zulip Chat](https://chat.fhir.org/#narrow/stream/179220-cql)
 * [clinical_quality_language on GitHub](https://github.com/cqframework/clinical_quality_language)
 * [Clinical Quality Expression Language at HL7](http://www.hl7.org/special/Committees/projman/searchableProjectIndex.cfm?action=view&ProjectNumber=1108)
-* [S&I Clinical Quality Framework (CQF)](http://wiki.siframework.org/Clinical+Quality+Framework+Initiative)
+* [Clinical Quality Framework (CQF)](https://confluence.hl7.org/display/CQIWC/Clinical+Quality+Framework)
 
 
 ## Local Plugin Development
@@ -39,7 +59,6 @@ electronic clinical quality measures (eCQM) and clinical decision support rules
 * run `apm link` to create a symbolic link from the git directories to the working directory
     * working directory can be found at <user dir>\.atom\packages\language-cql
 * reload workspace to get updates (ctr-shift-f5)
-
 
 ## License
 
