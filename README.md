@@ -43,7 +43,7 @@ Within each test case folder, there are folders for each resource type, and with
 
 ### Common Issues
 
-You receive the error "Address already in use" when attempting to execute CQL: #21
+You receive the error "Address already in use" when attempting to execute CQL: [#21](issues/21)
 
 ## More About the Clinical Quality Language
 
