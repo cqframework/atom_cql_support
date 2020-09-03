@@ -41,6 +41,10 @@ Within the library folder, there is a folder for each "test case", in the form o
 
 Within each test case folder, there are folders for each resource type, and within each resource type, the individual resource files, in XML or JSON format. (Including a Patient folder with a file for the Patient with the ID of the "test case").
 
+### Common Issues
+
+You receive the error "Address already in use" when attempting to execute CQL: #21
+
 ## More About the Clinical Quality Language
 
 The Clinical Quality Language (CQL) is a domain specific language for expressing
