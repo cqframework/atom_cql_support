@@ -1,6 +1,6 @@
 {
   "name": "language-cql",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "Clinical Quality Language support in Atom",
   "homepage": "https://github.com/cqframework/atom_cql_support#readme",
   "license": "Apache 2.0",
