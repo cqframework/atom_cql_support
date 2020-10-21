@@ -75,7 +75,7 @@
   "languageServer": {
     "groupId": "org.opencds.cqf.cql",
     "artifactId": "ls",
-    "version": "1.4.0-SNAPSHOT",
+    "version": "1.5.0-SNAPSHOT",
     "classifier": "shaded"
   },
   "cqlService": {
@@ -90,9 +90,9 @@
       "title": "CQL Language Version",
       "type": "string",
       "enum": [
-        "1.4"
+        "1.5"
       ],
-      "default": "1.4"
+      "default": "1.5"
     },
     "toolDebug": {
       "order": 30,
