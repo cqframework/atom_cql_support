@@ -1,3 +1,7 @@
+## 2.8.1 - Bug Fixes
+
+* Fix path handling on Windows
+
 ## 2.8.0 - Support for CQL 1.5
 
 * Update to CQL Language Server 1.5.0-SNAPSHOT
