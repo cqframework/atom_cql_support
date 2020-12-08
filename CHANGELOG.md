@@ -1,3 +1,9 @@
+## 2.8.2 - Java 8
+
+* Reduced minimum Java version required to 1.8 [#15](https://github.com/cqframework/atom_cql_support/issues/15)
+* Fix version detection for 4-part versions [#25](https://github.com/cqframework/atom_cql_support/issues/25)
+* Removed developer options from plugin (non-developers were checking it) [#21](https://github.com/cqframework/atom_cql_support/issues/21)
+
 ## 2.8.1 - Bug Fixes
 
 * Fix path handling on Windows

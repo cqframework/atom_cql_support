@@ -21,11 +21,11 @@ After you've installed the _cql-language_ package, open any _.cql_ file in Atom.
 As long as the file has the _.cql_ extension, syntax and error highlighting will be
 automatically applied.
 
-To execute CQL right-click in the CQL Editor Windows and select `CQL -> Execute`
+To execute CQL right-click in the CQL Editor Windows and select `CQL -> Execute` or press `F5`
 
 The translation and execution capabilities in the plugin expect CQL files to be in the following directories, by convention:
 
-```
+```bash
 input/cql
 input/tests
 input/tests/<cql-library-name>
@@ -41,27 +41,24 @@ Within the library folder, there is a folder for each "test case", in the form o
 
 Within each test case folder, there are folders for each resource type, and within each resource type, the individual resource files, in XML or JSON format. (Including a Patient folder with a file for the Patient with the ID of the "test case").
 
-### Common Issues
-
-You receive the error "Address already in use" when attempting to execute CQL: [#21](https://github.com/cqframework/atom_cql_support/issues/21)
-
 ## More About the Clinical Quality Language
 
 The Clinical Quality Language (CQL) is a domain specific language for expressing
 electronic clinical quality measures (eCQM) and clinical decision support rules
 (CDS) in an author-friendly computable format. Find out more about CQL:
+
 * [CQL Specification](http://cql.hl7.org)
 * [CQL Stream on FHIR Zulip Chat](https://chat.fhir.org/#narrow/stream/179220-cql)
 * [clinical_quality_language on GitHub](https://github.com/cqframework/clinical_quality_language)
 * [Clinical Quality Expression Language at HL7](http://www.hl7.org/special/Committees/projman/searchableProjectIndex.cfm?action=view&ProjectNumber=1108)
 * [Clinical Quality Framework (CQF)](https://confluence.hl7.org/display/CQIWC/Clinical+Quality+Framework)
 
-
 ## Local Plugin Development
+
 * uninstall the language-cql package if you have it installed
 * run `npm install` in the root directory to install dependencies
 * run `apm link` to create a symbolic link from the git directories to the working directory
-    * working directory can be found at <user dir>\.atom\packages\language-cql
+  * working directory can be found at `<user dir>\.atom\packages\language-cql`
 * reload workspace to get updates (ctr-shift-f5)
 
 ## License
@@ -72,7 +69,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-http://www.apache.org/licenses/LICENSE-2.0
+<http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
