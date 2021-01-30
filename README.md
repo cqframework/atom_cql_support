@@ -30,7 +30,7 @@ input/cql
 input/tests
 input/tests/<cql-library-name>
 input/tests/<cql-library-name>/<patient-id>
-input/tests/<cql-library-name>/<patient-id>/<resource-type-name>/<resource files>
+input/tests/<cql-library-name>/<patient-id>/<resource-type-name>/<resource files> // flexible structure
 input/vocabulary/codesystem
 input/vocabulary/valueset
 ```
@@ -39,7 +39,7 @@ Within the tests folder, there is a folder for each CQL library, by name (note t
 
 Within the library folder, there is a folder for each "test case", in the form of a Patient (the execution only supports patient context execution at this point). The folder must have the same id as the patient (that's how the evaluator knows what the patient id is).
 
-Within each test case folder, there are folders for each resource type, and within each resource type, the individual resource files, in XML or JSON format. (Including a Patient folder with a file for the Patient with the ID of the "test case").
+Within each test case folder are the resources for that specific test case. The resource files can be provided either directly in this folder, or they can be organized into folders by resource type name. Whether they are in the test folder or in subfolders, resources can be provided as bundles (included nested bundles), or as separate files, and in either XML or JSON format. If a Patient is provided, the id element of the Patient resource must match the name of the test case folder.
 
 ## More About the Clinical Quality Language
 
