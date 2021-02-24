@@ -1,3 +1,8 @@
+## 2.8.3 - Minor Updates
+
+* Updated to cql-evaluator release 1.1.0
+* Added better error notifications and status updates during initialization
+
 ## 2.8.2 - Java 8
 
 * Reduced minimum Java version required to 1.8 [#15](https://github.com/cqframework/atom_cql_support/issues/15)
