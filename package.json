@@ -20,8 +20,8 @@
     "child_process": "^1.0.2",
     "file-url": "^3.0.0",
     "path": "^0.12.7",
-    "request": "^2.34",
-    "request-promise-native": "^1.0.7"
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9"
   },
   "package-deps": [
     "atom-ide-ui"
@@ -33,7 +33,7 @@
   "enhancedScopes": [
     "source.rkt"
   ],
-  "main": "./lib/main",
+  "main": "./lib/cql-language-client",
   "consumedServices": {
     "linter-indie": {
       "versions": {
@@ -53,6 +53,11 @@
     "datatip": {
       "versions": {
         "0.1.0": "consumeDatatip"
+      }
+    },
+    "atom-ide-busy-signal": {
+      "versions": {
+        "0.1.0": "consumeBusySignal"
       }
     }
   },

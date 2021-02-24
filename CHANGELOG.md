@@ -1,6 +1,6 @@
 ## 2.8.3 - Minor Updates
 
-* Updated to cql-evaluator release 1.1.0
+* Update to CQL Evaluator 1.1.0
 * Added better error notifications and status updates during initialization
 
 ## 2.8.2 - Java 8
