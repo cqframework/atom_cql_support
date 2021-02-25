@@ -11,121 +11,20 @@
   "bugs": {
     "url": "https://github.com/cqframework/atom_cql_support/issues"
   },
-  "bundleDependencies": false,
-  "deprecated": false,
   "dependencies": {
-    "apm": "^1.0.2",
-    "atom-languageclient": "^0.9.9",
-    "atom-package-deps": "^5.1.0",
-    "child_process": "^1.0.2",
-    "file-url": "^3.0.0",
-    "path": "^0.12.7",
-    "request": "^2.88.2",
-    "request-promise-native": "^1.0.9"
+    "nuclide-commons-atom": "^0.7.2",
+    "path": "^0.12.7"
   },
-  "package-deps": [
-    "atom-ide-ui"
-  ],
+  "devDependencies": {
+    "apm": "^1.0.2"
+  },
+  "private": true,
   "engines": {
-    "atom": "*",
-    "node": "*"
+    "atom": ">= 1.25.0",
+    "node": ">= 10"
   },
-  "enhancedScopes": [
-    "source.rkt"
-  ],
-  "main": "./lib/cql-language-client",
-  "consumedServices": {
-    "linter-indie": {
-      "versions": {
-        "2.0.0": "consumeLinterV2"
-      }
-    },
-    "console": {
-      "versions": {
-        "0.1.0": "consumeConsole"
-      }
-    },
-    "status-bar": {
-      "versions": {
-        "^1.0.0": "consumeStatusBar"
-      }
-    },
-    "datatip": {
-      "versions": {
-        "0.1.0": "consumeDatatip"
-      }
-    },
-    "atom-ide-busy-signal": {
-      "versions": {
-        "0.1.0": "consumeBusySignal"
-      }
-    }
-  },
-  "providedServices": {
-    "code-highlight": {
-      "versions": {
-        "0.1.0": "provideCodeHighlight"
-      }
-    },
-    "code-format.range": {
-      "versions": {
-        "0.1.0": "provideCodeFormat"
-      }
-    },
-    "code-actions": {
-      "versions": {
-        "0.1.0": "provideCodeActions"
-      }
-    }
-  },
-  "cql-language-server": {
-    "groupId": "org.opencds.cqf.cql",
-    "artifactId": "ls",
-    "version": "1.5.0-SNAPSHOT",
-    "classifier": "shaded"
-  },
-  "cql-evaluator": {
-    "groupId": "org.opencds.cqf.cql",
-    "artifactId": "evaluator.cli",
-    "version": "1.2.0-SNAPSHOT",
-    "classifier": "shaded"
-  },
-  "cqf-tooling": {
-    "groupId": "org.opencds.cqf",
-    "artifactId": "tooling",
-    "version": "1.3.1-SNAPSHOT",
-    "classifier": "jar-with-dependencies"
-  },
-  "configSchema": {
-    "cqlVersion": {
-      "order": 10,
-      "title": "CQL Language Version",
-      "type": "string",
-      "enum": [
-        "1.5"
-      ],
-      "default": "1.5"
-    }
-  },
-  "_from": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
-  "_id": "language-cql@2.0.11",
-  "_inBundle": false,
-  "_integrity": "sha512-sSCd1Nej/vAZqT+c5rCSiDd6LCmLJlBihY37LPjrqmhxkdmjkxt6k/9uS7JWeCau85NEAoCQvbo2LQyiIl39qw==",
-  "_location": "/language-cql",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "remote",
-    "raw": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
-    "rawSpec": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
-    "saveSpec": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
-    "fetchSpec": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
-  "_shasum": "22d1efd8ed57069dd098caa01f97d601b9d26ba5",
-  "_spec": "https://www.atom.io/api/packages/language-cql/versions/2.0.11/tarball",
-  "_where": "/private/var/folders/sd/xddqk_hn6756rcmrnmhwcb340000gp/T/apm-install-dir-119727-15765-1ddgtlq.7t6u"
+  "main": "./main",
+  "workspaces": [
+    "language-cql/pkg/*"
+  ]
 }

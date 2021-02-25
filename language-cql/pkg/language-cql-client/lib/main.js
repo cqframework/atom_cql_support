@@ -4,12 +4,10 @@ const convert = require('atom-languageclient/build/lib/convert');
 
 const minJavaRuntime = 1.8;
 
-const { installServiceIfRequired, getServicePath }= require('./java-service-installer');
-const { getJavaCommand, checkJavaVersion } = require("./java-helpers");
+const { installJavaDependencies, getServicePath } = require('language-cql-common/lib/java-service-installer');
+const { getJavaCommand, checkJavaVersion } = require("language-cql-common/lib/java-helpers");
 
-const { CqfToolingClient } = require('./cqf-tooling');
-const { CqlEvaluatorClient } = require('./cql-evaluator');
-
+const javaDependencies = require('../package.json').javaDependencies;
 class CQLLanguageClient extends AutoLanguageClient {
   getGrammarScopes() { return ["source.cql"]; }
   getLanguageName() { return "cql"; }
@@ -19,26 +17,12 @@ class CQLLanguageClient extends AutoLanguageClient {
     super()
     this.statusElement = document.createElement('span')
     this.statusElement.className = 'inline-block'
-
-    this.cqfToolingClient = new CqfToolingClient();
-    this.cqlEvaluatorClient = new CqlEvaluatorClient();
   };
 
   activate() {
     require('atom-package-deps')
-      .install('language-cql')
-      .then(function () {
-        console.log('All dependencies installed, good to go')
-      })
+      .install('language-cql-client');
     super.activate();
-    this.cqfToolingClient.activate();
-    this.cqlEvaluatorClient.activate();
-  }
-
-  deactivate() {
-    this.cqlEvaluatorClient.deactivate();
-    this.cqfToolingClient.deactivate();
-    super.deactivate();
   }
 
   async startServerProcess() {
@@ -51,11 +35,10 @@ class CQLLanguageClient extends AutoLanguageClient {
   }
 
   async startLanguageServer() {
-    console.log('starting language server')
     await checkJavaVersion(minJavaRuntime);
-    await installServiceIfRequired("cql-language-server", (status) => this.updateInstallStatus(status));
+    await installJavaDependencies(javaDependencies, (status) => this.updateInstallStatus(status))
     const command = getJavaCommand();
-    let jarPath = getServicePath("cql-language-server");
+    let jarPath = getServicePath(javaDependencies["cql-language-server"]);
     var args = [
       '-cp',
       jarPath,
@@ -119,7 +102,7 @@ class CQLLanguageClient extends AutoLanguageClient {
   addViewELMMenu(connection) {
     const viewELMCommand = atom.commands.add(
       'atom-text-editor',
-      'language-cql:viewELM',
+      'language-cql-client:viewELM',
       async (e) => {
         this.viewELM(e.currentTarget)
       }
@@ -134,7 +117,7 @@ class CQLLanguageClient extends AutoLanguageClient {
           label: 'CQL',
           submenu: [{
             label: "View ELM",
-            command: 'language-cql:viewELM'
+            command: 'language-cql-client:viewELM'
           }],
           shouldDisplay: async (e) => { atom.workspace.getActiveTextEditor().getGrammar().name == "CQL" }
         }]
@@ -196,20 +179,8 @@ class CQLLanguageClient extends AutoLanguageClient {
       case 1: return atom.notifications.addError(message, options)
       case 2: return atom.notifications.addWarning(message, options)
       case 3: return atom.notifications.addInfo(message, options)
-      case 4: console.log(message)
+      case 4: this.logger.debug(message)
     }
-  }
-
-  consumeStatusBar(statusBar) {
-    this.statusBar = statusBar
-
-    this.cqlEvaluatorClient.consumeStatusBar(statusBar);
-  }
-
-  consumeBusySignal(busySignalService) {
-    super.consumeBusySignal(busySignalService);
-
-    this.cqlEvaluatorClient.consumeBusySignal(busySignalService);
   }
 
   async viewELM(editor) {
@@ -220,6 +191,29 @@ class CQLLanguageClient extends AutoLanguageClient {
     atom.textEditors.setGrammarOverride(newEditor, "text.xml");
     newEditor.insertText(result);
   }
+
+  handleServerStderr(stderr, projectPath) {
+    stderr.split('\n').filter((l) => l).forEach((line) => this.logServerProcessLine(line));
+  }
+
+  logServerProcessLine(line) {
+    if (line.startsWith("INFO")) {
+      this.logger.info(line);
+    }
+    else if (line.startsWith("WARN")) {
+      this.logger.warn(line);
+    }
+    else if (line.startsWith("ERROR")) {
+      this.logger.error(line);
+    }
+    else if (line.startsWith("DEBUG")) {
+      this.logger.debug(line)
+    }
+    else {
+      this.logger.log(line);
+    }
+  }
+
 }
 
 module.exports = new CQLLanguageClient();

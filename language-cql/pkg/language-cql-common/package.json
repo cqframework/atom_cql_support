@@ -1,0 +1,12 @@
+{
+  "name": "language-cql-common",
+  "version": "0.0.0",
+  "description": "Clinical Quality Language Common Code",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "file-url": "^3.0.0",
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9"
+  }
+}

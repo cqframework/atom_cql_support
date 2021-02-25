@@ -1,28 +1,27 @@
 const { DownloadFile } = require('atom-languageclient');
-const packagejson = require('../package.json');
 const fs = require('fs');
 
 const request = require('request-promise-native');
 const path = require('path');
 
-function getJavaCoords(serviceName) {
-  const coords = {
-    groupId: packagejson[serviceName].groupId,
-    artifactId: packagejson[serviceName].artifactId,
-    version: packagejson[serviceName].version,
-    classifier: packagejson[serviceName].classifier
-  };
+// function getJavaCoords(serviceName) {
+//   const coords = {
+//     groupId: packagejson[serviceName].groupId,
+//     artifactId: packagejson[serviceName].artifactId,
+//     version: packagejson[serviceName].version,
+//     classifier: packagejson[serviceName].classifier
+//   };
 
-  return coords;
-};
+//   return coords;
+// };
 
 function getJarHome() {
-  return path.join(__dirname, '..', 'jars');
+  return path.join(__dirname, '../../..', 'jars');
 }
 
-function getServicePath(serviceName) {
+function getServicePath(coords) {
   const jarHome = getJarHome();
-  const jarName = getLocalName(getJavaCoords(serviceName));
+  const jarName = getLocalName(coords);
   return path.join(jarHome, jarName);
 }
 
@@ -37,15 +36,22 @@ function getSearchUrl(groupId, artifactId, version, classifier) {
 }
 
 
-async function installServiceIfRequired(serviceName, updateInstallCallback) {
-  const doesExist = await isServiceInstalled(serviceName);
+async function installJavaDependencies(coordsMaps, updateInstallCallback) {
+  for (const [key, value] of Object.entries(coordsMaps)) {
+    await installServiceIfRequired(key, value, updateInstallCallback);
+  }
+}
+
+
+async function installServiceIfRequired(serviceName, coords, updateInstallCallback) {
+  const doesExist = await isServiceInstalled(coords);
   if (!doesExist) {
 
     await updateInstallCallback(`installing ${serviceName}`);
     let notification = atom.notifications.addInfo(`Downloading and installing ${serviceName}.`, { detail: "Check the status bar for download progress" });
-    
+
     try {
-      await installJar(serviceName, updateInstallCallback);
+      await installJar(serviceName, coords, updateInstallCallback);
       await updateInstallCallback(`installed ${serviceName}`)
       notification.dismiss();
       notification = atom.notifications.addSuccess(`Installed ${serviceName}.`);
@@ -59,15 +65,14 @@ async function installServiceIfRequired(serviceName, updateInstallCallback) {
   }
 }
 
-async function isServiceInstalled(serviceName) {
-  let jarPath = getServicePath(serviceName);
+async function isServiceInstalled(coords) {
+  let jarPath = getServicePath(coords);
   return fileExists(jarPath);
 }
 
 // Installs a jar using maven coordinates
-async function installJar(serviceName, updateInstallCallback) {
-  let coords = getJavaCoords(serviceName);
-  let jarPath = getServicePath(serviceName);
+async function installJar(serviceName, coords, updateInstallCallback) {
+  let jarPath = getServicePath(coords);
   let jarHome = getJarHome();
 
   var doesExist = await fileExists(jarHome);
@@ -85,7 +90,6 @@ async function installJar(serviceName, updateInstallCallback) {
 }
 
 async function setupDownload(url, serviceName, updateInstallCallback) {
-  console.log(url)
   let response = await request(url, { followRedirect: false, simple: false, resolveWithFullResponse: true });
   let redirectUrl = response.headers['location'];
 
@@ -113,7 +117,7 @@ function fileExists(path) {
 
 function handleJarError(error, jarPath) {
   const errorLower = error.message.toLowerCase();
-  if (error.includes('corrupt') || error.includes('invalid')) {
+  if (errorLower.includes('corrupt') || errorLower.includes('invalid')) {
 
     try {
       fs.unlinkSync(jarPath);
@@ -144,3 +148,4 @@ function handleJarError(error, jarPath) {
 exports.getServicePath = getServicePath;
 exports.installServiceIfRequired = installServiceIfRequired;
 exports.handleJarError = handleJarError;
+exports.installJavaDependencies = installJavaDependencies;

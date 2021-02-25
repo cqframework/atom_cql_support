@@ -1,0 +1,39 @@
+{
+  "name": "language-cql-debug",
+  "version": "0.0.0",
+  "description": "Clinical Quality Language Debug Support",
+  "main": "./lib/main",
+  "dependencies": {
+    "atom-package-deps": "^5.1.0",
+    "child_process": "^1.0.2",
+    "file-url": "^3.0.0",
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
+    "tmp" : "0.2.1",
+    "language-cql-common": "0.0.0"
+  },
+  "package-deps": [
+    "atom-ide-ui"
+  ],
+  "javaDependencies": {
+    "cql-evaluator": {
+      "groupId": "org.opencds.cqf.cql",
+      "artifactId": "evaluator.cli",
+      "version": "1.2.0-SNAPSHOT",
+      "classifier": "shaded"
+    }
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    },
+    "atom-ide-busy-signal": {
+      "versions": {
+        "0.1.0": "consumeBusySignal"
+      }
+    }
+  }
+}

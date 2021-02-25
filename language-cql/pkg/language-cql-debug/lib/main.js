@@ -1,16 +1,19 @@
 
-const { installServiceIfRequired, getServicePath, handleJarError } = require('./java-service-installer');
-const {mkDirByPathSync} = require('./file-system-helpers');
+const { getServicePath, installJavaDependencies } = require('language-cql-common/lib/java-service-installer');
 
-const { getJavaCommand } = require('./java-helpers');
+const { mkDirByPathSync } = require('language-cql-common/lib/file-system-helpers');
+
+const { getJavaCommand } = require('language-cql-common/lib/java-helpers');
 
 const cp = require("child_process");
 const fs = require('fs');
+const tmp = require('tmp');
 const fileUrl = require('file-url');
 const path = require('path');
 
-const { CompositeDisposable } = require('atom');
-const { Disposable } = require('atom-languageclient/build/lib/languageclient');
+const javaDependencies = require('../package.json').javaDependencies;
+
+const { CompositeDisposable, Disposable } = require('atom');
 class CqlEvaluatorClient {
     constructor() {
         this.statusElement = document.createElement('span')
@@ -18,23 +21,19 @@ class CqlEvaluatorClient {
     }
 
     activate() {
+        require('atom-package-deps')
+            .install('language-cql-debug');
         this.subscriptions = new CompositeDisposable();
 
-        this.ensureCQLService((status) => this.updateInstallStatus(status))
-        // Install required deps..
+        this.ensureCQLService();
     }
 
     deactivate() {
         this.subscriptions.dispose();
     }
 
-    consumeStatusBar(statusBar) {
-        this.statusBar = statusBar
-    }
-
-
-    async ensureCQLService(updateInstallCallback) {
-        await installServiceIfRequired("cql-evaluator", updateInstallCallback);
+    async ensureCQLService() {
+        await installJavaDependencies(javaDependencies, (status) => this.updateInstallStatus(status))
         this.addCQLExecuteMenu();
     };
 
@@ -42,7 +41,7 @@ class CqlEvaluatorClient {
     addCQLExecuteMenu() {
         this.subscriptions.add(atom.commands.add(
             'atom-text-editor',
-            'language-cql:executeCQLFile',
+            'language-cql-debug:executeCQLFile',
             async (e) => {
                 this.executeCQLFile(e.currentTarget, false)
             }
@@ -57,7 +56,7 @@ class CqlEvaluatorClient {
                     label: 'CQL',
                     submenu: [{
                         label: "Execute CQL",
-                        command: 'language-cql:executeCQLFile'
+                        command: 'language-cql-debug:executeCQLFile'
                     }],
                     shouldDisplay: async (e) => { atom.workspace.getActiveTextEditor().getGrammar().name == "CQL" }
                 }]
@@ -66,7 +65,7 @@ class CqlEvaluatorClient {
 
 
     async executeCQLFile(editor) {
-        const jarPath = getServicePath("cql-evaluator");
+        const jarPath = getServicePath(javaDependencies["cql-evaluator"]);
         const command = getJavaCommand();
 
         //convert.default.pathToUri doesn't give a useable format.  Not sure if that's a problem.
@@ -126,7 +125,7 @@ class CqlEvaluatorClient {
         }
         else {
             fhirVersion = "R4"
-            atom.notifications.addInfo("Unable to determine version of FHIR used. Defaulting to R4.", { dismissable: true });
+            atom.notifications.addInfo("Unable to determine version of FHIR used. Defaulting to R4.");
         }
 
 
@@ -151,8 +150,8 @@ class CqlEvaluatorClient {
         await textEditor.insertText(`${modelMessage}\r\n`);
         await textEditor.insertText(`${terminologyMessage}\r\n`);
 
-        let args = this.getJavaJarArgs(jarPath);
-        args = this.getCqlCommandArgs(args, fhirVersion);
+        let jarArgs = this.getJavaJarArgs(jarPath);
+        let operationArgs = this.getCqlCommandArgs(fhirVersion);
 
         if (modelRootPath && modelRootPath != '') {
             var dirs = fs.readdirSync(modelRootPath, { withFileTypes: true })
@@ -162,18 +161,18 @@ class CqlEvaluatorClient {
                 dirs.forEach(async (dirent) => {
                     const context = dirent.name;
                     const modelPath = path.join(modelRootPath, dirent.name);
-                    args = this.getExecArgs(args, libraryDirectory, libraryName, modelType, modelPath, terminologyPath, context, measurementPeriod);
+                    operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, modelPath, terminologyPath, context, measurementPeriod);
                 });
             }
             else {
-                args = this.getExecArgs(args, libraryDirectory, libraryName, modelType, null, terminologyPath, null, measurementPeriod);
+                operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, null, terminologyPath, null, measurementPeriod);
             }
         }
         else {
-            args = this.getExecArgs(args, libraryDirectory, libraryName, modelType, null, terminologyPath, null, measurementPeriod);
+            operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, null, terminologyPath, null, measurementPeriod);
         }
 
-        await this.executeCQL(textEditor, editor, command, args);
+        await this.executeCQL(textEditor, command, jarArgs, operationArgs);
     }
 
     getModelRootPath(parentPath, libraryPathName) {
@@ -185,26 +184,34 @@ class CqlEvaluatorClient {
                     if (dirent.name == libraryPathName) {
                         modelRootPath = path.join(parentPath, dirent.name);
                     } else {
-                        modelRootPath = getModelRootPath(path.join(parentPath, dirent.name), libraryPathName)
+                        modelRootPath = this.getModelRootPath(path.join(parentPath, dirent.name), libraryPathName)
                     }
                 }
             });
         return modelRootPath;
     }
 
-    async executeCQL(textEditor, editor, command, args) {
-        console.log(command + ' ' + args.join(' '));
+    async executeCQL(textEditor, command, jarArgs, operationArgs) {
+
+        const tmpobj = tmp.fileSync();
+        fs.writeSync(tmpobj.fd, operationArgs.join("\n"))
+
+        const newArgs = ["argfile", tmpobj.name];
 
         const startExecution = new Date();
-        const cql = cp.spawn(command, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+        Array.prototype.push.apply(jarArgs, newArgs);
+        const cql = cp.spawn(command, jarArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
         await this.echoToTextEditor(textEditor, cql.stdout);
 
         const endExecution = new Date();
 
-        await this.echoToConsole(cql.stderr);
+        await this.echoToTextEditor(textEditor, cql.stderr);
 
         await textEditor.moveToBottom();
+
         await textEditor.insertText(`elapsed: ${((endExecution - startExecution) / 1000).toString()} seconds\r\n\r\n`);
+
+        tmpobj.removeCallback();
     }
 
     async* chunksToLines(chunksAsync) {
@@ -253,14 +260,14 @@ class CqlEvaluatorClient {
         return args;
     }
 
-    getCqlCommandArgs(args, fhirVersion) {
-        args.push("cql")
+    getCqlCommandArgs(fhirVersion) {
+        let args = ["cql"];
 
         if (fhirVersion && fhirVersion != '') {
-            args.push(`-fv=${fhirVersion}`)
+            args.push(`-fv=${fhirVersion}`);
         }
         else {
-            args.push(`-fv=R4`)
+            args.push(`-fv=R4`);
         }
         return args;
     }
@@ -320,8 +327,12 @@ class CqlEvaluatorClient {
     consumeBusySignal(busySignalService) {
         this.busySignalService = busySignalService;
 
-        this.subscriptions.add(Disposable.create(() => delete this.busySignalService));
+        this.subscriptions.add(new Disposable(() => delete this.busySignalService));
+    }
+
+    consumeStatusBar(statusBar) {
+        this.statusBar = statusBar
     }
 }
 
-module.exports = { CqlEvaluatorClient };
+module.exports = new CqlEvaluatorClient();

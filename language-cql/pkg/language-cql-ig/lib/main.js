@@ -1,16 +1,21 @@
 
-const { installServiceIfRequired, getServicePath, handleJarError } = require('./java-service-installer');
+const { getServicePath, installJavaDependencies } = require('language-cql-common/lib/java-service-installer');
 
-const { getJavaCommand } = require('./java-helpers');
+const { getJavaCommand } = require('language-cql-common/lib/java-helpers');
 
 const cp = require("child_process");
 
-const { CompositeDisposable } = require('atom');
+const { CompositeDisposable, Disposable } = require('atom');
+
+const javaDependencies = require('../package.json').javaDependencies;
 
 class CqfToolingClient {
     activate() {
+        require('atom-package-deps')
+        .install('language-cql-ig');
         this.subscriptions = new CompositeDisposable()
-        //this.ensureCqfTooling((status) => this.updateInstallStatus(status))
+
+        // this.ensureCqfTooling();
     }
 
     deactivate() {
@@ -20,7 +25,7 @@ class CqfToolingClient {
     addRefreshLibraryMenu() {
         this.subscriptions.add(atom.commands.add(
             '.tree-view .file .name[data-name$=".cql"]',
-            'language-cql:refreshLibrary',
+            'language-cql-ig:refreshLibrary',
             async (e) => {
                 refreshCql(e.currentTarget);
             }
@@ -32,7 +37,7 @@ class CqfToolingClient {
                     label: 'IG Operations',
                     submenu: [{
                         label: "Refresh",
-                        command: 'language-cql:refreshLibrary'
+                        command: 'language-cql-ig:refreshLibrary'
                     }]
                 },
                 {
@@ -45,7 +50,7 @@ class CqfToolingClient {
     addRefreshIGMenu() {
         this.subscriptions.add(atom.commands.add(
             '.tree-view .file .name[data-name$="ig.ini"]',
-            'language-cql:refreshIg',
+            'language-cql-ig:refreshIg',
             async (e) => {
                 refreshIg(e.currentTarget)
             }
@@ -57,7 +62,7 @@ class CqfToolingClient {
                     label: 'IG Operations',
                     submenu: [{
                         label: "Refresh",
-                        command: 'language-cql:refreshIg'
+                        command: 'language-cql-ig:refreshIg'
                     }]
                 },
                 {
@@ -67,10 +72,8 @@ class CqfToolingClient {
         }));
     }
 
-    async ensureCqfTooling(updateInstallCallback) {
-        // Disabled until this is hardened a bit more
-        // console.log('loading CQF Tooling');
-        await installServiceIfRequired("cqf-tooling", updateInstallCallback);
+    async ensureCqfTooling() {
+        await installJavaDependencies(javaDependencies, (status) => this.updateInstallStatus(status));
         addRefreshIGMenu(connection);
         addRefreshLibraryMenu(connection);
     }
@@ -132,6 +135,42 @@ class CqfToolingClient {
             }
         });
     }
+
+    updateInstallStatus(status) {
+        const isComplete = (status.includes('installed') || status.includes('failed'));
+        if (this.busySignalService) {
+            if (this._installSignal == null) {
+                if (!isComplete) {
+                    this._installSignal = this.busySignalService.reportBusy(status, { revealTooltip: true })
+                }
+            } else {
+                if (isComplete) {
+                    this._installSignal.dispose()
+                } else {
+                    this._installSignal.setTitle(status)
+                }
+            }
+        } else {
+            this.updateStatusBar(status)
+        }
+    }
+
+    updateStatusBar(text) {
+        this.statusElement.textContent = `${this.name} ${text}`
+        if (!this.statusTile && this.statusBar) {
+            this.statusTile = this.statusBar.addRightTile({ item: this.statusElement, priority: 1000 })
+        }
+    }
+
+    consumeBusySignal(busySignalService) {
+        this.busySignalService = busySignalService;
+
+        this.subscriptions.add(new Disposable(() => delete this.busySignalService));
+    }
+
+    consumeStatusBar(statusBar) {
+        this.statusBar = statusBar
+    }
 }
 
-module.exports = { CqfToolingClient };
+module.exports = new CqfToolingClient();
