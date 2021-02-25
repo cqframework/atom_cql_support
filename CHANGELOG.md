@@ -1,5 +1,14 @@
 # Release Notes
 
+## 2.9.0 - Performance Enhancements
+
+* Update to CQL Evaluator 1.2.0-SNAPSHOT
+  * Added batch mode for test cases - big performance increase for libraries with lots of test cases
+  * Cleaned up CQL output to show IDs for resource
+* Add highlighting for ELM
+* Added additional logging and parallel initialization on plugin start
+* Fixed errors not being shown during execution
+
 ## 2.8.3 - Minor Updates
 
 * Update to CQL Evaluator 1.1.0
