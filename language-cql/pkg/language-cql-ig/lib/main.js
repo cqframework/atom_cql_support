@@ -10,16 +10,16 @@ const { CompositeDisposable, Disposable } = require('atom');
 const javaDependencies = require('../package.json').javaDependencies;
 
 class CqfToolingClient {
-    async activate() {
-        await require('atom-package-deps')
+    activate() {
+        require('atom-package-deps')
         .install('language-cql-ig');
-        this.subscriptions = new CompositeDisposable()
+        this.subscriptions = new CompositeDisposable();
 
         // this.ensureCqfTooling();
     }
 
     deactivate() {
-        this.subscriptions.dispose()
+        this.subscriptions.dispose();
     }
 
     addRefreshLibraryMenu() {

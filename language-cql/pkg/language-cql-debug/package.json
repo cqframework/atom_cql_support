@@ -6,6 +6,10 @@
   "package-deps": [
     "atom-ide-ui"
   ],
+  "dependencies": {
+    "language-cql-common" : "0.0.0",
+    "language-cql-client" : "0.0.0"
+  },
   "javaDependencies": {
     "cql-evaluator": {
       "groupId": "org.opencds.cqf.cql",

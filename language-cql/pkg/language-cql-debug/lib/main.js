@@ -16,8 +16,8 @@ class CqlEvaluatorClient {
         this.statusElement.className = 'inline-block'
     }
 
-    async activate() {
-        await require('atom-package-deps')
+    activate() {
+        require('atom-package-deps')
             .install('language-cql-debug');
         this.subscriptions = new CompositeDisposable();
 
