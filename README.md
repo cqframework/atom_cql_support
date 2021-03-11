@@ -56,6 +56,7 @@ electronic clinical quality measures (eCQM) and clinical decision support rules
 ## Local Plugin Development
 
 * uninstall the language-cql package from Atom if you have it installed
+* run `npm install -g yarn`
 * run `yarn install` in the root directory to install dependencies
 * run `apm link` to create a symbolic link from the git directories to the working directory
   * working directory can be found at `<user dir>\.atom\packages\language-cql`

@@ -61,6 +61,7 @@ async function installServiceIfRequired(serviceName, coords, updateInstallCallba
       notification.dismiss();
       await updateInstallCallback(`installation failed for ${serviceName}`);
       atom.notifications.addError(`Failed to install ${serviceName}.`, { detail: (e && e.message) ? e.message : "Unknown error.", dismissable: true })
+      throw e;
     }
   }
 }
@@ -94,7 +95,7 @@ async function setupDownload(url, serviceName, updateInstallCallback) {
   let redirectUrl = response.headers['location'];
 
   if (!redirectUrl || redirectUrl == '') {
-    throw new Error(`Unable to locate required files to download for ${serviceName}`);
+    throw new Error(`Unable to locate and/or download files for ${serviceName}`);
   }
 
   response = await request.head(redirectUrl);
