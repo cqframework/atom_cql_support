@@ -1,0 +1,2 @@
+"atom-text-editor[data-grammar='source cql']":
+    'f5': 'language-cql-debug:executeCQLFile'

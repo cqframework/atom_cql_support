@@ -5,9 +5,15 @@
 * Update to CQL Evaluator 1.2.0-SNAPSHOT
   * Added batch mode for test cases - big performance increase for libraries with lots of test cases
   * Cleaned up CQL output to show IDs for resource
-* Add highlighting for ELM
+* Update to CQL Language Server 1.5.2-SNAPSHOT
+  * Added (incomplete, not yet functional) support for debug API
+* Added highlighting for ELM
 * Added additional logging and parallel initialization on plugin start
+* Added split-pane for evaluation results
+* Fixed evaluation results taking focus
 * Fixed errors not being shown during execution
+* Fixed CQL commands showing up in non-CQL files
+  * Fixed f5 hotkey being bound in non-CQL files
 
 ## 2.8.3 - Minor Updates
 

@@ -25,6 +25,11 @@
     }
   },
   "consumedServices": {
+    "cql-language-client": {
+      "versions": {
+        "0.1.0": "consumeLanguageClient"
+      }
+    },
     "status-bar": {
       "versions": {
         "^1.0.0": "consumeStatusBar"

@@ -119,7 +119,7 @@ class CQLLanguageClient extends AutoLanguageClient {
             label: "View ELM",
             command: 'language-cql-client:viewELM'
           }],
-          shouldDisplay: async (e) => { atom.workspace.getActiveTextEditor().getGrammar().name == "CQL" }
+          shouldDisplay: (e) => { return atom.workspace.getActiveTextEditor().getGrammar().name == "CQL" }
         }]
     });
 
@@ -186,7 +186,7 @@ class CQLLanguageClient extends AutoLanguageClient {
   async viewELM(editor) {
     const path = convert.default.pathToUri(editor.getModel().getPath());
     const connection = await this.getConnectionForEditor(editor.getModel());
-    const result = await connection.executeCommand({ command: 'Other.ViewXML', arguments: [path] });
+    const result = await connection.executeCommand({ command: 'org.opencds.cqf.cql.ls.viewElm', arguments: [path] });
     const newEditor = await atom.workspace.open();
     atom.textEditors.setGrammarOverride(newEditor, "text.xml");
     newEditor.insertText(result);
@@ -212,6 +212,10 @@ class CQLLanguageClient extends AutoLanguageClient {
     else {
       this.logger.log(line);
     }
+  }
+
+  provideLanguageClient() {
+    return this;
   }
 
 }

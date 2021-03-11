@@ -19,8 +19,8 @@
   "javaDependencies": {
     "cql-language-server": {
       "groupId": "org.opencds.cqf.cql",
-      "artifactId": "ls",
-      "version": "1.5.0-SNAPSHOT",
+      "artifactId": "cql-ls",
+      "version": "1.5.2-SNAPSHOT",
       "classifier": "shaded"
     }
   },
@@ -52,6 +52,11 @@
     }
   },
   "providedServices": {
+    "cql-language-client": {
+      "versions": {
+        "0.1.0": "provideLanguageClient"
+      }
+    },
     "code-highlight": {
       "versions": {
         "0.1.0": "provideCodeHighlight"

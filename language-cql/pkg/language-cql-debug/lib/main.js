@@ -33,7 +33,7 @@ class CqlEvaluatorClient {
     }
 
     async ensureCQLService() {
-        await installJavaDependencies(javaDependencies, (status) => this.updateInstallStatus(status))
+        // await installJavaDependencies(javaDependencies, (status) => this.updateInstallStatus(status))
         this.addCQLExecuteMenu();
     };
 
@@ -58,15 +58,21 @@ class CqlEvaluatorClient {
                         label: "Execute CQL",
                         command: 'language-cql-debug:executeCQLFile'
                     }],
-                    shouldDisplay: async (e) => { atom.workspace.getActiveTextEditor().getGrammar().name == "CQL" }
+                    shouldDisplay: (e) => { return atom.workspace.getActiveTextEditor().getGrammar().name == "CQL" }
                 }]
         }));
     }
 
 
     async executeCQLFile(editor) {
-        const jarPath = getServicePath(javaDependencies["cql-evaluator"]);
-        const command = getJavaCommand();
+
+        if (!this.languageClient) {
+            // TODO: Set up commands so they initialize on language client consumption.
+            return;
+        }
+
+        // const jarPath = getServicePath(javaDependencies["cql-evaluator"]);
+        // const command = getJavaCommand();
 
         //convert.default.pathToUri doesn't give a useable format.  Not sure if that's a problem.
         //hope it's not because path handles it.
@@ -140,8 +146,12 @@ class CqlEvaluatorClient {
             convertEol: true,
             termName: 'xterm-256color',
             scrollback: 1000,
-            rows: 8
+            rows: 8,
+            split : 'right',
+            searchAllPanes : true
         });
+
+        await editor.focus();
 
         await textEditor.moveToBottom();
         var modelMessage = (modelRootPath && modelRootPath != '') ? `Data path: ${modelRootPath}` : `No tests found at ${testPath}. Evaluation may fail if data is required.`
@@ -150,7 +160,7 @@ class CqlEvaluatorClient {
         await textEditor.insertText(`${modelMessage}\r\n`);
         await textEditor.insertText(`${terminologyMessage}\r\n`);
 
-        let jarArgs = this.getJavaJarArgs(jarPath);
+        // let jarArgs = this.getJavaJarArgs(jarPath);
         let operationArgs = this.getCqlCommandArgs(fhirVersion);
 
         if (modelRootPath && modelRootPath != '') {
@@ -172,7 +182,7 @@ class CqlEvaluatorClient {
             operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, null, terminologyPath, null, measurementPeriod);
         }
 
-        await this.executeCQL(textEditor, command, jarArgs, operationArgs);
+        await this.executeCQL(textEditor, operationArgs, editor);
     }
 
     getModelRootPath(parentPath, libraryPathName) {
@@ -191,27 +201,42 @@ class CqlEvaluatorClient {
         return modelRootPath;
     }
 
-    async executeCQL(textEditor, command, jarArgs, operationArgs) {
+    async executeCQL(textEditor, operationArgs, editor) {
 
-        const tmpobj = tmp.fileSync();
-        fs.writeSync(tmpobj.fd, operationArgs.join("\n"))
+        if (!this.languageClient) {
+            return;
+        }
 
-        const newArgs = ["argfile", tmpobj.name];
+        
 
+
+        // const tmpobj = tmp.fileSync();
+        // fs.writeSync(tmpobj.fd, operationArgs.join("\n"))
+
+        // const newArgs = ["argfile", tmpobj.name];
+
+
+        // Array.prototype.push.apply(jarArgs, newArgs);
+
+
+        const connection = await this.languageClient.getConnectionForEditor(editor.getModel());
         const startExecution = new Date();
-        Array.prototype.push.apply(jarArgs, newArgs);
-        const cql = cp.spawn(command, jarArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
-        await this.echoToTextEditor(textEditor, cql.stdout);
-
+        const result = await connection.executeCommand({ command: 'org.opencds.cqf.cql.ls.plugin.debug.startDebugSession', arguments: operationArgs });
         const endExecution = new Date();
+        //const cql = cp.spawn(command, jarArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
+        
+        await textEditor.insertText(result);
+        // await this.echoToTextEditor(textEditor, cql.stdout);
 
-        await this.echoToTextEditor(textEditor, cql.stderr);
+
+
+        // await this.echoToTextEditor(textEditor, cql.stderr);
 
         await textEditor.moveToBottom();
 
         await textEditor.insertText(`elapsed: ${((endExecution - startExecution) / 1000).toString()} seconds\r\n\r\n`);
 
-        tmpobj.removeCallback();
+        // tmpobj.removeCallback();
     }
 
     async* chunksToLines(chunksAsync) {
@@ -332,6 +357,11 @@ class CqlEvaluatorClient {
 
     consumeStatusBar(statusBar) {
         this.statusBar = statusBar
+    }
+    
+    consumeLanguageClient(languageClient) {
+        this.languageClient = languageClient;
+        this.subscriptions.add(new Disposable(() => delete this.languageClient));
     }
 }
 
