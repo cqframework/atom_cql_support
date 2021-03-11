@@ -1,7 +1,7 @@
 
-const { getServicePath, installJavaDependencies } = require('language-cql-common/lib/java-service-installer');
+const { getServicePath, installJavaDependencies } = require('../../language-cql-common/lib/java-service-installer');
 
-const { getJavaCommand } = require('language-cql-common/lib/java-helpers');
+const { getJavaCommand } = require('../../language-cql-common/lib/java-helpers');
 
 const cp = require("child_process");
 
@@ -10,8 +10,8 @@ const { CompositeDisposable, Disposable } = require('atom');
 const javaDependencies = require('../package.json').javaDependencies;
 
 class CqfToolingClient {
-    activate() {
-        require('atom-package-deps')
+    async activate() {
+        await require('atom-package-deps')
         .install('language-cql-ig');
         this.subscriptions = new CompositeDisposable()
 

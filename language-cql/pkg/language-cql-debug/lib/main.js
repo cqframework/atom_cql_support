@@ -1,9 +1,5 @@
 
-const { getServicePath, installJavaDependencies } = require('language-cql-common/lib/java-service-installer');
-
-const { mkDirByPathSync } = require('language-cql-common/lib/file-system-helpers');
-
-const { getJavaCommand } = require('language-cql-common/lib/java-helpers');
+const { mkDirByPathSync } = require('../../language-cql-common/lib/file-system-helpers');
 
 const cp = require("child_process");
 const fs = require('fs');
@@ -20,8 +16,8 @@ class CqlEvaluatorClient {
         this.statusElement.className = 'inline-block'
     }
 
-    activate() {
-        require('atom-package-deps')
+    async activate() {
+        await require('atom-package-deps')
             .install('language-cql-debug');
         this.subscriptions = new CompositeDisposable();
 

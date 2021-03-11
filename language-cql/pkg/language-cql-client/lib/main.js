@@ -4,8 +4,8 @@ const convert = require('atom-languageclient/build/lib/convert');
 
 const minJavaRuntime = 1.8;
 
-const { installJavaDependencies, getServicePath } = require('language-cql-common/lib/java-service-installer');
-const { getJavaCommand, checkJavaVersion } = require("language-cql-common/lib/java-helpers");
+const { installJavaDependencies, getServicePath } = require('../../language-cql-common/lib/java-service-installer');
+const { getJavaCommand, checkJavaVersion } = require("../../language-cql-common/lib/java-helpers");
 
 const javaDependencies = require('../package.json').javaDependencies;
 class CQLLanguageClient extends AutoLanguageClient {
@@ -19,8 +19,8 @@ class CQLLanguageClient extends AutoLanguageClient {
     this.statusElement.className = 'inline-block'
   };
 
-  activate() {
-    require('atom-package-deps')
+  async activate() {
+    await require('atom-package-deps')
       .install('language-cql-client');
     super.activate();
   }

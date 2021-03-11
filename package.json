@@ -12,11 +12,29 @@
     "url": "https://github.com/cqframework/atom_cql_support/issues"
   },
   "dependencies": {
+    "atom-languageclient": "^0.9.9",
+    "atom-package-deps": "^5.1.0",
+    "child_process": "^1.0.2",
+    "file-url": "^3.0.0",
+    "path": "^0.12.7",
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
     "nuclide-commons-atom": "^0.7.2",
-    "path": "^0.12.7"
+    "tmp": "0.2.1"
   },
+  "package-deps": [
+    "atom-ide-ui"
+  ],
   "devDependencies": {
-    "apm": "^1.0.2"
+    "apm": "^1.0.2",
+    "yarn": "^1.22.10",
+    "@types/atom": "^1.26.0",
+    "@types/classnames": "^2.2.11",
+    "@types/dompurify": "^2.2.1",
+    "@types/jasmine": "^3.6.4",
+    "@types/node": "^14.14.31",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1"
   },
   "private": true,
   "engines": {

@@ -3,11 +3,6 @@
   "version": "0.0.0",
   "description": "Clinical Quality Language IG Support",
   "main": "./lib/main",
-  "dependencies": {
-    "atom-package-deps": "^5.1.0",
-    "child_process": "^1.0.2",
-    "language-cql-common" : "0.0.0"
-  },
   "package-deps": [
     "atom-ide-ui"
   ],
