@@ -7,11 +7,17 @@ const tmp = require('tmp');
 const fileUrl = require('file-url');
 const path = require('path');
 
-const javaDependencies = require('../package.json').javaDependencies;
+const EventEmitter = require("events");
+
+// const javaDependencies = require('../package.json').javaDependencies;
 
 const { CompositeDisposable, Disposable } = require('atom');
+
+const BUSY_SIGNAL_READY_EVENT = Symbol('language-cql-busy-signal-ready');
+
 class CqlEvaluatorClient {
     constructor() {
+        this.emitter = new EventEmitter();
         this.statusElement = document.createElement('span')
         this.statusElement.className = 'inline-block'
     }
@@ -61,7 +67,7 @@ class CqlEvaluatorClient {
 
 
     async executeCQLFile(editor) {
-
+        await this.busySignalReady();
         if (!this.languageClient) {
             // TODO: Set up commands so they initialize on language client consumption.
             return;
@@ -143,8 +149,8 @@ class CqlEvaluatorClient {
             termName: 'xterm-256color',
             scrollback: 1000,
             rows: 8,
-            split : 'right',
-            searchAllPanes : true
+            split: 'right',
+            searchAllPanes: true
         });
 
         await editor.focus();
@@ -203,7 +209,7 @@ class CqlEvaluatorClient {
             return;
         }
 
-        
+
 
 
         // const tmpobj = tmp.fileSync();
@@ -220,7 +226,7 @@ class CqlEvaluatorClient {
         const result = await connection.executeCommand({ command: 'org.opencds.cqf.cql.ls.plugin.debug.startDebugSession', arguments: operationArgs });
         const endExecution = new Date();
         //const cql = cp.spawn(command, jarArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
-        
+
         await textEditor.insertText(result);
         // await this.echoToTextEditor(textEditor, cql.stdout);
 
@@ -345,16 +351,29 @@ class CqlEvaluatorClient {
         }
     }
 
+    async busySignalReady() {
+        let self = this;
+        return new Promise(function (resolve, reject) {
+          if (self.busySignalService) {
+            resolve()
+            return
+          }
+          self.emitter.on(BUSY_SIGNAL_READY_EVENT, resolve)
+        })
+      }
+
     consumeBusySignal(busySignalService) {
+
         this.busySignalService = busySignalService;
 
         this.subscriptions.add(new Disposable(() => delete this.busySignalService));
+        this.emitter.emit(BUSY_SIGNAL_READY_EVENT)
     }
 
     consumeStatusBar(statusBar) {
         this.statusBar = statusBar
     }
-    
+
     consumeLanguageClient(languageClient) {
         this.languageClient = languageClient;
         this.subscriptions.add(new Disposable(() => delete this.languageClient));

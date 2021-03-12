@@ -5,11 +5,19 @@ const { getJavaCommand } = require('../../language-cql-common/lib/java-helpers')
 
 const cp = require("child_process");
 
+const EventEmitter = require("events");
+
 const { CompositeDisposable, Disposable } = require('atom');
 
 const javaDependencies = require('../package.json').javaDependencies;
 
+const BUSY_SIGNAL_READY_EVENT = Symbol('language-cql-busy-signal-ready');
+
 class CqfToolingClient {
+
+    constructor() {
+        this.emitter = new EventEmitter();
+    }
     activate() {
         require('atom-package-deps')
         .install('language-cql-ig');
@@ -73,6 +81,7 @@ class CqfToolingClient {
     }
 
     async ensureCqfTooling() {
+        await this.busySignalReady();
         await installJavaDependencies(javaDependencies, (status) => this.updateInstallStatus(status));
         addRefreshIGMenu(connection);
         addRefreshLibraryMenu(connection);
@@ -162,10 +171,22 @@ class CqfToolingClient {
         }
     }
 
+    async busySignalReady() {
+        let self = this;
+        return new Promise(function (resolve, reject) {
+          if (self.busySignalService) {
+            resolve()
+            return
+          }
+          self.emitter.on(BUSY_SIGNAL_READY_EVENT, resolve)
+        })
+      }
     consumeBusySignal(busySignalService) {
+
         this.busySignalService = busySignalService;
 
         this.subscriptions.add(new Disposable(() => delete this.busySignalService));
+        this.emitter.emit(BUSY_SIGNAL_READY_EVENT)
     }
 
     consumeStatusBar(statusBar) {

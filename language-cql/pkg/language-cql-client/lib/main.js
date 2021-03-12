@@ -2,12 +2,17 @@ const { AutoLanguageClient } = require("atom-languageclient");
 const cp = require("child_process");
 const convert = require('atom-languageclient/build/lib/convert');
 
+const EventEmitter = require("events");
+
 const minJavaRuntime = 1.8;
 
 const { installJavaDependencies, getServicePath } = require('../../language-cql-common/lib/java-service-installer');
 const { getJavaCommand, checkJavaVersion } = require("../../language-cql-common/lib/java-helpers");
 
 const javaDependencies = require('../package.json').javaDependencies;
+
+const BUSY_SIGNAL_READY_EVENT = Symbol('language-cql-busy-signal-ready');
+
 class CQLLanguageClient extends AutoLanguageClient {
   getGrammarScopes() { return ["source.cql"]; }
   getLanguageName() { return "cql"; }
@@ -15,6 +20,7 @@ class CQLLanguageClient extends AutoLanguageClient {
 
   constructor() {
     super()
+    this.emitter = new EventEmitter();
     this.statusElement = document.createElement('span')
     this.statusElement.className = 'inline-block'
   };
@@ -26,7 +32,25 @@ class CQLLanguageClient extends AutoLanguageClient {
     super.activate()
   }
 
+  async busySignalReady() {
+    let self = this;
+    return new Promise(function (resolve, reject) {
+      if (self.busySignalService) {
+        resolve()
+        return
+      }
+      self.emitter.on(BUSY_SIGNAL_READY_EVENT, resolve)
+    })
+  }
+
+  consumeBusySignal(service) {
+    const disposable = super.consumeBusySignal(service)
+    this.emitter.emit(BUSY_SIGNAL_READY_EVENT)
+    return disposable
+  }
+
   async startServerProcess() {
+    await this.busySignalReady();
     const config = { 'win32': 'win', 'darwin': 'mac', 'linux': 'linux' }[process.platform]
     if (config == null) {
       throw Error(`${this.getServerName()} not supported on ${process.platform}`)
@@ -218,7 +242,6 @@ class CQLLanguageClient extends AutoLanguageClient {
   provideLanguageClient() {
     return this;
   }
-
 }
 
 module.exports = new CQLLanguageClient();
