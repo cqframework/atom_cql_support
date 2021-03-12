@@ -1,15 +1,11 @@
 
-const { mkDirByPathSync } = require('../../language-cql-common/lib/file-system-helpers');
+// const { mkDirByPathSync } = require('../../language-cql-common/lib/file-system-helpers');
 
-const cp = require("child_process");
 const fs = require('fs');
-const tmp = require('tmp');
 const fileUrl = require('file-url');
 const path = require('path');
 
 const EventEmitter = require("events");
-
-// const javaDependencies = require('../package.json').javaDependencies;
 
 const { CompositeDisposable, Disposable } = require('atom');
 
@@ -104,6 +100,10 @@ class CqlEvaluatorClient {
         var terminologyPath = path.join(projectPath, 'input', 'vocabulary', 'valueset');
         //}
 
+        if (!fs.existsSync(terminologyPath)) {
+            terminologyPath = ''
+        }
+
         //todo: get this working (currently errors with: Index 0 out of bounds for length 0)
         //const measurementPeriod = 'Interval[@2019-01-01T00:00:00.0, @2020-01-01T00:00:00.0)';
         const modelType = "FHIR";
@@ -138,7 +138,7 @@ class CqlEvaluatorClient {
 
 
         // Recursively creates directory
-        mkDirByPathSync(resultPath);
+        // mkDirByPathSync(resultPath);
 
         const modelRootPath = this.getModelRootPath(testPath, libraryPathName);
 
@@ -165,7 +165,7 @@ class CqlEvaluatorClient {
         // let jarArgs = this.getJavaJarArgs(jarPath);
         let operationArgs = this.getCqlCommandArgs(fhirVersion);
 
-        if (modelRootPath && modelRootPath != '') {
+        if (modelRootPath && modelRootPath != '' && fs.existsSync(modelRootPath)) {
             var dirs = fs.readdirSync(modelRootPath, { withFileTypes: true })
                 .filter(dirent => dirent.isDirectory())
 
@@ -189,17 +189,19 @@ class CqlEvaluatorClient {
 
     getModelRootPath(parentPath, libraryPathName) {
         var modelRootPath = '';
-        fs.readdirSync(parentPath, { withFileTypes: true })
-            .filter(dirent => dirent.isDirectory())
-            .forEach(dirent => {
-                if (modelRootPath == '') {
-                    if (dirent.name == libraryPathName) {
-                        modelRootPath = path.join(parentPath, dirent.name);
-                    } else {
-                        modelRootPath = this.getModelRootPath(path.join(parentPath, dirent.name), libraryPathName)
+        if (fs.existsSync(parentPath)) {
+            fs.readdirSync(parentPath, { withFileTypes: true })
+                .filter(dirent => dirent.isDirectory())
+                .forEach(dirent => {
+                    if (modelRootPath == '') {
+                        if (dirent.name == libraryPathName) {
+                            modelRootPath = path.join(parentPath, dirent.name);
+                        } else {
+                            modelRootPath = this.getModelRootPath(path.join(parentPath, dirent.name), libraryPathName)
+                        }
                     }
-                }
-            });
+                });
+        }
         return modelRootPath;
     }
 
@@ -208,9 +210,6 @@ class CqlEvaluatorClient {
         if (!this.languageClient) {
             return;
         }
-
-
-
 
         // const tmpobj = tmp.fileSync();
         // fs.writeSync(tmpobj.fd, operationArgs.join("\n"))
@@ -354,13 +353,13 @@ class CqlEvaluatorClient {
     async busySignalReady() {
         let self = this;
         return new Promise(function (resolve, reject) {
-          if (self.busySignalService) {
-            resolve()
-            return
-          }
-          self.emitter.on(BUSY_SIGNAL_READY_EVENT, resolve)
+            if (self.busySignalService) {
+                resolve()
+                return
+            }
+            self.emitter.on(BUSY_SIGNAL_READY_EVENT, resolve)
         })
-      }
+    }
 
     consumeBusySignal(busySignalService) {
 

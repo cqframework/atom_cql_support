@@ -10,14 +10,6 @@
     "language-cql-common" : "0.0.0",
     "language-cql-client" : "0.0.0"
   },
-  "javaDependencies": {
-    "cql-evaluator": {
-      "groupId": "org.opencds.cqf.cql",
-      "artifactId": "evaluator.cli",
-      "version": "1.2.0-SNAPSHOT",
-      "classifier": "shaded"
-    }
-  },
   "consumedServices": {
     "cql-language-client": {
       "versions": {
