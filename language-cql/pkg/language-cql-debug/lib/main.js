@@ -100,10 +100,6 @@ class CqlEvaluatorClient {
         var terminologyPath = path.join(projectPath, 'input', 'vocabulary', 'valueset');
         //}
 
-        if (!fs.existsSync(terminologyPath)) {
-            terminologyPath = ''
-        }
-
         //todo: get this working (currently errors with: Index 0 out of bounds for length 0)
         //const measurementPeriod = 'Interval[@2019-01-01T00:00:00.0, @2020-01-01T00:00:00.0)';
         const modelType = "FHIR";
@@ -155,9 +151,14 @@ class CqlEvaluatorClient {
 
         await editor.focus();
 
+        let terminologyPathActual = terminologyPath;
+        if (!terminologyPath || terminologyPath == '' || !fs.existsSync(terminologyPath)) {
+            terminologyPathActual = ''
+        }
+
         await textEditor.moveToBottom();
         var modelMessage = (modelRootPath && modelRootPath != '') ? `Data path: ${modelRootPath}` : `No tests found at ${testPath}. Evaluation may fail if data is required.`
-        var terminologyMessage = (terminologyPath && terminologyPath != '') ? `Terminology path: ${terminologyPath}` : "No terminology path specified. Evaluation may fail if terminology is required."
+        var terminologyMessage = (terminologyPathActual && terminologyPathActual != '') ? `Terminology path: ${terminologyPathActual}` : `No terminology found at ${terminologyPath}. Evaluation may fail if terminology is required.`
         await textEditor.insertText('Running tests.\r\n');
         await textEditor.insertText(`${modelMessage}\r\n`);
         await textEditor.insertText(`${terminologyMessage}\r\n`);
@@ -173,15 +174,15 @@ class CqlEvaluatorClient {
                 dirs.forEach(async (dirent) => {
                     const context = dirent.name;
                     const modelPath = path.join(modelRootPath, dirent.name);
-                    operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, modelPath, terminologyPath, context, measurementPeriod);
+                    operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, modelPath, terminologyPathActual, context, measurementPeriod);
                 });
             }
             else {
-                operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, null, terminologyPath, null, measurementPeriod);
+                operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, null, terminologyPathActual, null, measurementPeriod);
             }
         }
         else {
-            operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, null, terminologyPath, null, measurementPeriod);
+            operationArgs = this.getExecArgs(operationArgs, libraryDirectory, libraryName, modelType, null, terminologyPathActual, null, measurementPeriod);
         }
 
         await this.executeCQL(textEditor, operationArgs, editor);
