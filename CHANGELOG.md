@@ -1,5 +1,10 @@
 # Release Notes
 
+## 2.9.1 - Bug Fixes
+
+* Fixed install status not showing in status bar
+* Fixed failing to run cql in empty directory
+
 ## 2.9.0 - Performance Enhancements
 
 * Update to CQL Evaluator 1.2.0-SNAPSHOT
