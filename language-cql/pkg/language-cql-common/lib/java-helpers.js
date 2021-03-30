@@ -12,7 +12,8 @@ function checkJavaVersion(minJavaRuntime) {
                 'language-cql could not launch your Java runtime.',
                 err.code == 'ENOENT'
                     ? `No Java runtime found at <b>${command}</b>.`
-                    : `Could not spawn the Java runtime <b>${command}</b>.`
+                    : `Could not spawn the Java runtime <b>${command}</b>.`,
+                    minJavaRuntime
             )
             reject()
         })
@@ -26,7 +27,8 @@ function checkJavaVersion(minJavaRuntime) {
                 if (version == null) {
                     showJavaRequirements(
                         `language-cql requires Java ${minJavaRuntime} but could not determine your Java version.`,
-                        `Could not parse the Java '--showVersion' output <pre>${output}</pre>.`
+                        `Could not parse the Java '--showVersion' output <pre>${output}</pre>.`,
+                        minJavaRuntime
                     )
                     reject()
                 }
@@ -35,7 +37,8 @@ function checkJavaVersion(minJavaRuntime) {
                 } else {
                     showJavaRequirements(
                         `language-cql requires Java ${minJavaRuntime} or later but found ${version}`,
-                        `If you have Java ${minJavaRuntime} installed please Set Java Path correctly. If you do not please Download Java ${minJavaRuntime} or later and install it.`
+                        `If you have Java ${minJavaRuntime} installed please Set Java Path correctly. If you do not please Download Java ${minJavaRuntime} or later and install it.`,
+                        minJavaRuntime
                     )
                     reject()
                 }
@@ -55,7 +58,7 @@ function getJavaVersionFromOutput(output) {
     return match != null && match.length > 0 ? Number(match[1]) : null
 }
 
-function showJavaRequirements(title, description) {
+function showJavaRequirements(title, description, minJavaRuntime) {
     atom.notifications.addError(title, {
         dismissable: true,
         buttons: [
