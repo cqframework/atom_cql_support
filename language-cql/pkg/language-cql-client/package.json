@@ -65,16 +65,5 @@
         "0.1.0": "provideCodeActions"
       }
     }
-  },
-  "configSchema": {
-    "cqlVersion": {
-      "order": 10,
-      "title": "CQL Language Version",
-      "type": "string",
-      "enum": [
-        "1.5"
-      ],
-      "default": "1.5"
-    }
   }
 }

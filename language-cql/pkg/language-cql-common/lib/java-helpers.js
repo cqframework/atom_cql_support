@@ -76,7 +76,7 @@ function getJavaCommand() {
 
 function getJavaPath() {
     return (new Array(
-        atom.config.get('ide-java.javaHome'),
+        atom.config.get('language-cql.javaHome'),
         process.env['JDK_HOME'],
         process.env['JAVA_HOME'])
     ).find(j => j)

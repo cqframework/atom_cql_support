@@ -44,5 +44,24 @@
   "main": "./main",
   "workspaces": [
     "language-cql/pkg/*"
-  ]
+  ],
+
+  "configSchema": {
+    "cqlVersion": {
+      "order": 10,
+      "title": "CQL Language Version",
+      "type": "string",
+      "enum": [
+        "1.5"
+      ],
+      "default": "1.5"
+    },
+    "javaHome" : {
+      "order": 20,
+      "title": "Java Home",
+      "type" : "string",
+      "default": "",
+      "description": "Absolute path to Java 8 or later home folder used to launch the CQL language server (overrides JAVA_HOME and JDK_HOME)."
+    }
+  }
 }

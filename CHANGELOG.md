@@ -4,6 +4,9 @@
 
 * Fixed install status not showing in status bar
 * Fixed failing to run cql in empty directory
+* Fixed installation error when Java is missing
+* Fixed execute CQL showing before language server is ready
+* Added basic upgrade logic to clean up between versions
 
 ## 2.9.0 - Performance Enhancements
 

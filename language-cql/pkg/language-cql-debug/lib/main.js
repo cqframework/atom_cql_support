@@ -1,6 +1,3 @@
-
-// const { mkDirByPathSync } = require('../../language-cql-common/lib/file-system-helpers');
-
 const fs = require('fs');
 const fileUrl = require('file-url');
 const path = require('path');
@@ -9,7 +6,8 @@ const EventEmitter = require("events");
 
 const { CompositeDisposable, Disposable } = require('atom');
 
-const BUSY_SIGNAL_READY_EVENT = Symbol('language-cql-busy-signal-ready');
+const BUSY_SIGNAL_READY_EVENT = Symbol('language-cql-debug-busy-signal-ready');
+const LANGUAGE_SERVER_READY_EVENT = Symbol('language-cql-debug-language-server-ready');
 
 class CqlEvaluatorClient {
     constructor() {
@@ -31,12 +29,13 @@ class CqlEvaluatorClient {
     }
 
     async ensureCQLService() {
-        // await installJavaDependencies(javaDependencies, (status) => this.updateInstallStatus(status))
+        await this.languageClientReady();
         this.addCQLExecuteMenu();
     };
 
 
     addCQLExecuteMenu() {
+
         this.subscriptions.add(atom.commands.add(
             'atom-text-editor',
             'language-cql-debug:executeCQLFile',
@@ -64,13 +63,7 @@ class CqlEvaluatorClient {
 
     async executeCQLFile(editor) {
         await this.busySignalReady();
-        if (!this.languageClient) {
-            // TODO: Set up commands so they initialize on language client consumption.
-            return;
-        }
-
-        // const jarPath = getServicePath(javaDependencies["cql-evaluator"]);
-        // const command = getJavaCommand();
+        await this.languageClientReady();
 
         //convert.default.pathToUri doesn't give a useable format.  Not sure if that's a problem.
         //hope it's not because path handles it.
@@ -163,7 +156,6 @@ class CqlEvaluatorClient {
         await textEditor.insertText(`${modelMessage}\r\n`);
         await textEditor.insertText(`${terminologyMessage}\r\n`);
 
-        // let jarArgs = this.getJavaJarArgs(jarPath);
         let operationArgs = this.getCqlCommandArgs(fhirVersion);
 
         if (modelRootPath && modelRootPath != '' && fs.existsSync(modelRootPath)) {
@@ -207,38 +199,19 @@ class CqlEvaluatorClient {
     }
 
     async executeCQL(textEditor, operationArgs, editor) {
+        const connection = await this.languageClient.getConnectionForEditor(editor.getModel());
 
-        if (!this.languageClient) {
-            return;
+        if (!connection) {
+            throw `Unable to get connection to the language server for ${editor.getModel().getPath()}. Try restarting Atom.`;
         }
 
-        // const tmpobj = tmp.fileSync();
-        // fs.writeSync(tmpobj.fd, operationArgs.join("\n"))
-
-        // const newArgs = ["argfile", tmpobj.name];
-
-
-        // Array.prototype.push.apply(jarArgs, newArgs);
-
-
-        const connection = await this.languageClient.getConnectionForEditor(editor.getModel());
         const startExecution = new Date();
         const result = await connection.executeCommand({ command: 'org.opencds.cqf.cql.ls.plugin.debug.startDebugSession', arguments: operationArgs });
         const endExecution = new Date();
-        //const cql = cp.spawn(command, jarArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
 
         await textEditor.insertText(result);
-        // await this.echoToTextEditor(textEditor, cql.stdout);
-
-
-
-        // await this.echoToTextEditor(textEditor, cql.stderr);
-
         await textEditor.moveToBottom();
-
         await textEditor.insertText(`elapsed: ${((endExecution - startExecution) / 1000).toString()} seconds\r\n\r\n`);
-
-        // tmpobj.removeCallback();
     }
 
     async* chunksToLines(chunksAsync) {
@@ -268,23 +241,6 @@ class CqlEvaluatorClient {
         for await (const line of this.chunksToLines(readable)) {
             console.log(line);
         }
-    }
-
-    getJavaJarArgs(jarPath) {
-        var args = [];
-        // if (debug) {
-        //     args.push('-Xdebug');
-        //     args.push('-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5051,quiet=y')
-        // }
-
-        // args.push("-Xshare:auto")
-        // args.push("-Xverify:none")
-        args.push("-XX:TieredStopAtLevel=1")
-
-        args.push('-jar');
-        args.push(jarPath);
-
-        return args;
     }
 
     getCqlCommandArgs(fhirVersion) {
@@ -362,12 +318,23 @@ class CqlEvaluatorClient {
         })
     }
 
+    async languageClientReady() {
+        let self = this;
+        return new Promise(function (resolve, reject) {
+            if (self.languageClient) {
+                resolve()
+                return
+            }
+            self.emitter.on(LANGUAGE_SERVER_READY_EVENT, resolve)
+        })
+    }
+
     consumeBusySignal(busySignalService) {
 
         this.busySignalService = busySignalService;
 
         this.subscriptions.add(new Disposable(() => delete this.busySignalService));
-        this.emitter.emit(BUSY_SIGNAL_READY_EVENT)
+        this.emitter.emit(BUSY_SIGNAL_READY_EVENT);
     }
 
     consumeStatusBar(statusBar) {
@@ -377,6 +344,7 @@ class CqlEvaluatorClient {
     consumeLanguageClient(languageClient) {
         this.languageClient = languageClient;
         this.subscriptions.add(new Disposable(() => delete this.languageClient));
+        this.emitter.emit(LANGUAGE_SERVER_READY_EVENT);
     }
 }
 
