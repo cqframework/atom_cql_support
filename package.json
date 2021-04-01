@@ -1,6 +1,6 @@
 {
   "name": "language-cql",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "description": "Clinical Quality Language support in Atom",
   "homepage": "https://github.com/cqframework/atom_cql_support#readme",
   "license": "Apache-2.0",
@@ -45,7 +45,6 @@
   "workspaces": [
     "language-cql/pkg/*"
   ],
-
   "configSchema": {
     "cqlVersion": {
       "order": 10,
@@ -56,10 +55,10 @@
       ],
       "default": "1.5"
     },
-    "javaHome" : {
+    "javaHome": {
       "order": 20,
       "title": "Java Home",
-      "type" : "string",
+      "type": "string",
       "default": "",
       "description": "Absolute path to Java 8 or later home folder used to launch the CQL language server (overrides JAVA_HOME and JDK_HOME)."
     }
