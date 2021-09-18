@@ -1,5 +1,16 @@
 # Release Notes
 
+## 2.10.1 - Bug fix
+
+* missed release notes on 2.10.0
+
+## 2.10.0 - Translator Updates
+
+* Update to cql-language server 1.5.2
+  * cql-translator 1.5.4
+  * cql-evaluator 1.3.0
+  * performance improvements for large CQL projects
+  
 ## 2.9.1 - Bug Fixes
 
 * Fixed install status not showing in status bar
