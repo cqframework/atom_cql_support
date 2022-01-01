@@ -98,6 +98,7 @@ class CqlEvaluatorClient {
         const modelType = "FHIR";
         const contextType = 'Patient';
         var fhirVersion = "R4";
+        const optionsPath = path.join(libraryDirectory, 'cql-options.json');
         const measurementPeriod = ''
         const testPath = path.join(projectPath, 'input', 'tests');
         const resultPath = path.join(testPath, 'results');
@@ -156,7 +157,7 @@ class CqlEvaluatorClient {
         await textEditor.insertText(`${modelMessage}\r\n`);
         await textEditor.insertText(`${terminologyMessage}\r\n`);
 
-        let operationArgs = this.getCqlCommandArgs(fhirVersion);
+        let operationArgs = this.getCqlCommandArgs(fhirVersion, optionsPath);
 
         if (modelRootPath && modelRootPath != '' && fs.existsSync(modelRootPath)) {
             var dirs = fs.readdirSync(modelRootPath, { withFileTypes: true })
@@ -243,7 +244,7 @@ class CqlEvaluatorClient {
         }
     }
 
-    getCqlCommandArgs(fhirVersion) {
+    getCqlCommandArgs(fhirVersion, optionsPath) {
         let args = ["cql"];
 
         if (fhirVersion && fhirVersion != '') {
@@ -252,6 +253,11 @@ class CqlEvaluatorClient {
         else {
             args.push(`-fv=R4`);
         }
+
+        if (optionsPath && fs.existsSync(optionsPath)) {
+            args.push(`-op=${optionsPath}`);
+        }
+
         return args;
     }
 
