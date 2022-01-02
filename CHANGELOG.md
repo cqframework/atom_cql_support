@@ -1,5 +1,12 @@
 # Release Notes
 
+## 2.11.0 - CQL Options Support
+
+* Added support for the cql-options file
+* Updated to cql-language server 1.5.3
+  * cql-translator 1.5.6
+  * cql-evaluator 1.4.1
+
 ## 2.10.1 - Bug fix
 
 * missed release notes on 2.10.0
