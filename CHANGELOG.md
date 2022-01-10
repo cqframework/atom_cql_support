@@ -1,5 +1,13 @@
 # Release Notes
 
+## 2.11.1 - Bug fixes
+
+* Update to cql-language server 1.5.4
+  * fixes for CQL 1.5
+  * fixes for duplicate problems
+  * fixes for no error highlighting on certain CQL files
+  * fixes for null pointer exceptions in output
+
 ## 2.11.0 - CQL Options Support
 
 * Added support for the cql-options file
