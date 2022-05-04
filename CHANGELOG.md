@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.11.2 - Updates
+
+* Update to cql-language server 1.5.6
+
 ## 2.11.1 - Bug fixes
 
 * Update to cql-language server 1.5.4
