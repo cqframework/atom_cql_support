@@ -1,4 +1,7 @@
-**NOTICE**: With the [sunsetting of Atom](https://github.blog/2022-06-08-sunsetting-atom/) the CQL plugin is no longer being supported. Please migrate to using the [VS Code](https://marketplace.visualstudio.com/items?itemName=cqframework.cql) plugin instead.
+# :rotating_light:Notice:rotating_light:
+*This plugin is deprecated*
+
+ With the [sunsetting of Atom](https://github.blog/2022-06-08-sunsetting-atom/) the CQL plugin is no longer being supported. Please migrate to using the [VS Code](https://marketplace.visualstudio.com/items?itemName=cqframework.cql) plugin instead.
 
 
 
